@@ -19,8 +19,6 @@ func NewCityRequestByIp() (*CityRequest, bool) {
 		return nil, false
 	}
 
-	defer resp.Body.Close()
-
 	respBodyBlock, err := io.ReadAll(resp.Body)
 	if err != nil {
 		fmt.Println("Ошибка NewCityRequestByIp/io.ReadAll")
@@ -32,6 +30,8 @@ func NewCityRequestByIp() (*CityRequest, bool) {
 		fmt.Println("Ошибка NewCityRequestByIp/json.Unmarshal")
 		return nil, false
 	}
+
+	defer resp.Body.Close()
 
 	return &cityRequestByIp, true
 }

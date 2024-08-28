@@ -48,14 +48,14 @@ func NewCityByString(inCity string) (*CityRequest, bool) {
 			return nil, false
 		}
 
-		defer resp.Body.Close()
-
-		if !cityResponse.Error {
-			return &CityRequest{City: inCity}, true
-		} else {
+		if cityResponse.Error {
 			fmt.Println("Ошибка NewCityRequest/ityResponse.Error == true")
 			return nil, false
 		}
+
+		defer resp.Body.Close()
+
+		return &CityRequest{City: inCity}, true
 	}
 
 	fmt.Println("Ошибка NewCityRequest/json.Marshal")

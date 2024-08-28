@@ -15,7 +15,7 @@ func main() {
 
 	cityRequest, isCreate = requests.NewCityByString(*city)
 	if !isCreate {
-		fmt.Println("Прекращено")
+		fmt.Println("Прекращено 1")
 		return
 	}
 
@@ -23,9 +23,17 @@ func main() {
 
 	cityRequest, isCreate = requests.NewCityRequestByIp()
 	if !isCreate {
-		fmt.Println("Прекращено")
+		fmt.Println("Прекращено 2")
 		return
 	}
 
 	fmt.Println("Город местный:", cityRequest.City)
+
+	weather, isGet := requests.GetWeather(cityRequest, 1)
+	if !isGet {
+		fmt.Println("Прекращено 3")
+		return
+	}
+
+	fmt.Println("Погода:", weather)
 }
