@@ -17,8 +17,8 @@ type CityResponse struct {
 	Error bool `json:"error"`
 }
 
-// post "https://countriesnow.space/api/v0.1/countries/population/cities"
-func NewCityRequest(inCity string) (*CityRequest, bool) {
+// Если переданное наименование города существует, вернёт объект CityRequest с полем city
+func NewCityByString(inCity string) (*CityRequest, bool) {
 	if blockBytes, err := json.Marshal(map[string]string{"city": inCity}); err == nil {
 		resp, err := http.Post(
 			"https://countriesnow.space/api/v0.1/countries/population/cities",
@@ -51,9 +51,7 @@ func NewCityRequest(inCity string) (*CityRequest, bool) {
 		defer resp.Body.Close()
 
 		if !cityResponse.Error {
-			return &CityRequest{
-				City: inCity,
-			}, true
+			return &CityRequest{City: inCity}, true
 		} else {
 			fmt.Println("Ошибка NewCityRequest/ityResponse.Error == true")
 			return nil, false
