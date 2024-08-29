@@ -7,33 +7,34 @@ import (
 )
 
 func main() {
-	city := flag.String("city", "Moskva", "target town")
+	city := flag.String("city", "", "target town")
+	format := flag.Int("format", 1, "weather info")
 	flag.Parse()
 
 	var cityRequest *requests.CityRequest
 	var isCreate bool
 
-	cityRequest, isCreate = requests.NewCityByString(*city)
-	if !isCreate {
-		fmt.Println("Прекращено 1")
+	if *city != "" {
+		cityRequest, isCreate = requests.NewCityByString(*city)
+		if !isCreate {
+			fmt.Println("Город не найден. Попробуйте снова")
+			return
+		}
+
+	} else {
+		cityRequest, isCreate = requests.NewCityRequestByIp()
+		if !isCreate {
+			fmt.Println("Местоположение не определено. Попробуйте снова")
+			return
+		}
+	}
+
+	weather, isWeather := requests.GetWeather(cityRequest, *format)
+
+	if !isWeather {
+		fmt.Printf("Невозможно получить погоду по указанному городу {%s}\n", cityRequest.City)
 		return
 	}
 
-	fmt.Println("Город по строке:", cityRequest.City)
-
-	cityRequest, isCreate = requests.NewCityRequestByIp()
-	if !isCreate {
-		fmt.Println("Прекращено 2")
-		return
-	}
-
-	fmt.Println("Город местный:", cityRequest.City)
-
-	weather, isGet := requests.GetWeather(cityRequest, 1)
-	if !isGet {
-		fmt.Println("Прекращено 3")
-		return
-	}
-
-	fmt.Println("Погода:", weather)
+	fmt.Printf("Погода в городе {%s}: %s\n: ", cityRequest.City, weather)
 }
